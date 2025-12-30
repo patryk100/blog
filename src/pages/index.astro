@@ -9,40 +9,535 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			.hero {
+				text-align: center;
+				padding: 3em 0 2em;
+				background: linear-gradient(135deg, rgba(0, 255, 65, 0.05) 0%, transparent 100%);
+				border-bottom: 1px solid rgb(var(--border-color));
+				margin-bottom: 2em;
+			}
+
+			.hero h1 {
+				font-size: clamp(2em, 5vw, 3.5em);
+				margin: 0 0 0.5em;
+				background: linear-gradient(135deg, var(--accent) 0%, rgb(var(--gray)) 100%);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+				border: none;
+				padding: 0;
+			}
+
+			.hero p {
+				font-size: clamp(1em, 2vw, 1.2em);
+				color: rgb(var(--gray));
+				max-width: 600px;
+				margin: 0 auto;
+			}
+
+			.section-header {
+				display: flex;
+				align-items: center;
+				gap: 1em;
+				margin: 2.5em 0 1.5em;
+			}
+
+			.section-header::before {
+				content: '';
+				height: 2px;
+				flex: 1;
+				background: linear-gradient(90deg, transparent, var(--accent), transparent);
+			}
+
+			.section-header h2 {
+				margin: 0;
+				font-size: clamp(1.5em, 3vw, 2em);
+				border: none;
+				padding: 0;
+				white-space: nowrap;
+			}
+
+			.section-header::after {
+				content: '';
+				height: 2px;
+				flex: 1;
+				background: linear-gradient(90deg, transparent, var(--accent), transparent);
+			}
+
+			.grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+				gap: 1.5em;
+				margin: 2em 0;
+			}
+
+			.card {
+				background: linear-gradient(135deg, rgb(var(--bg-secondary)) 0%, rgb(var(--bg-tertiary)) 100%);
+				border: 1px solid rgb(var(--border-color));
+				border-radius: 6px;
+				padding: 1.5em;
+				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+				position: relative;
+				overflow: hidden;
+			}
+
+			.card::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 3px;
+				background: linear-gradient(90deg, var(--accent), transparent);
+				opacity: 0;
+				transition: opacity 0.3s ease;
+			}
+
+			.card:hover {
+				border-color: var(--accent);
+				transform: translateY(-4px);
+				box-shadow: 0 10px 30px rgba(0, 255, 65, 0.15);
+			}
+
+			.card:hover::before {
+				opacity: 1;
+			}
+
+			.card h3 {
+				color: var(--accent);
+				margin: 0 0 1em;
+				font-size: clamp(1.1em, 2vw, 1.3em);
+				border-bottom: 1px solid rgba(var(--border-color), 0.5);
+				padding-bottom: 0.5em;
+				display: flex;
+				align-items: center;
+				gap: 0.5em;
+			}
+
+			.card h3::before {
+				content: '▸';
+				color: var(--accent);
+				font-size: 1.2em;
+			}
+
+			.card ul {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.card li {
+				margin: 0.75em 0;
+				font-size: clamp(0.9em, 1.5vw, 0.95em);
+				position: relative;
+				padding-left: 1.5em;
+			}
+
+			.card li::before {
+				content: '›';
+				position: absolute;
+				left: 0;
+				color: var(--accent);
+				font-weight: bold;
+				font-size: 1.2em;
+				transition: transform 0.2s ease;
+			}
+
+			.card li:hover::before {
+				transform: translateX(3px);
+			}
+
+			.card a {
+				color: rgb(var(--gray-dark));
+				transition: all 0.2s ease;
+				display: inline-block;
+			}
+
+			.card a:hover {
+				color: var(--accent);
+				transform: translateX(2px);
+				border-bottom-color: var(--accent);
+			}
+
+			.embed-section {
+				background: linear-gradient(135deg, rgb(var(--bg-secondary)) 0%, rgb(var(--bg-tertiary)) 100%);
+				border: 1px solid rgb(var(--border-color));
+				border-left: 4px solid var(--accent);
+				border-radius: 6px;
+				padding: 2em;
+				margin: 2.5em 0;
+				box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+			}
+
+			.embed-section h2 {
+				margin: 0 0 0.5em;
+				color: var(--accent);
+				font-size: clamp(1.5em, 3vw, 2em);
+				border: none;
+			}
+
+			.embed-section > p {
+				color: rgb(var(--gray));
+				margin-bottom: 1.5em;
+				font-size: clamp(0.95em, 1.5vw, 1em);
+			}
+
+			.feed-container {
+				max-height: 500px;
+				overflow-y: auto;
+				background-color: rgb(var(--bg-primary));
+				border: 1px solid rgb(var(--border-color));
+				border-radius: 4px;
+				padding: 0;
+				margin-top: 1em;
+			}
+
+			.feed-container::-webkit-scrollbar {
+				width: 10px;
+			}
+
+			.feed-container::-webkit-scrollbar-track {
+				background: rgb(var(--bg-primary));
+				border-radius: 4px;
+			}
+
+			.feed-container::-webkit-scrollbar-thumb {
+				background: var(--accent-muted);
+				border-radius: 4px;
+			}
+
+			.feed-container::-webkit-scrollbar-thumb:hover {
+				background: var(--accent);
+			}
+
+			.link-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+				gap: 1em;
+				margin-top: 1.5em;
+			}
+
+			.link-card {
+				display: flex;
+				flex-direction: column;
+				background: linear-gradient(135deg, rgb(var(--bg-tertiary)) 0%, rgb(var(--bg-secondary)) 100%);
+				border: 1px solid rgb(var(--border-color));
+				border-left: 3px solid var(--accent);
+				padding: 1.25em;
+				border-radius: 4px;
+				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+				text-decoration: none;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.link-card::after {
+				content: '→';
+				position: absolute;
+				right: 1em;
+				top: 50%;
+				transform: translateY(-50%) translateX(-10px);
+				opacity: 0;
+				color: var(--accent);
+				font-size: 1.5em;
+				transition: all 0.3s ease;
+			}
+
+			.link-card:hover {
+				border-left-width: 5px;
+				background: linear-gradient(135deg, rgba(0, 255, 65, 0.05) 0%, rgb(var(--bg-tertiary)) 100%);
+				transform: translateX(4px);
+				box-shadow: 0 4px 15px rgba(0, 255, 65, 0.2);
+			}
+
+			.link-card:hover::after {
+				opacity: 1;
+				transform: translateY(-50%) translateX(0);
+			}
+
+			.link-card strong {
+				color: var(--accent);
+				display: block;
+				margin-bottom: 0.5em;
+				font-size: clamp(1em, 2vw, 1.1em);
+			}
+
+			.link-card span {
+				color: rgb(var(--gray));
+				font-size: clamp(0.85em, 1.5vw, 0.9em);
+				line-height: 1.4;
+			}
+
+			.embed-section .link-grid a:last-child {
+				padding-right: 2.5em;
+			}
+
+			@media (max-width: 768px) {
+				.hero {
+					padding: 2em 1em 1.5em;
+				}
+
+				.section-header {
+					flex-direction: column;
+					text-align: center;
+				}
+
+				.section-header::before,
+				.section-header::after {
+					display: none;
+				}
+
+				.grid {
+					grid-template-columns: 1fr;
+					gap: 1em;
+				}
+
+				.card {
+					padding: 1.25em;
+				}
+
+				.embed-section {
+					padding: 1.5em;
+					margin: 1.5em 0;
+				}
+
+				.feed-container {
+					max-height: 350px;
+				}
+
+				.link-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+
+			@media (min-width: 1200px) {
+				.grid {
+					grid-template-columns: repeat(3, 1fr);
+				}
+			}
+			.subscribe-section {
+				background: linear-gradient(135deg, rgb(var(--bg-secondary)) 0%, rgb(var(--bg-tertiary)) 100%);
+				border: 1px solid rgb(var(--border-color));
+				border-left: 3px solid var(--accent);
+				border-radius: 8px;
+				padding: 2.5em;
+				margin: 2em 0;
+				text-align: center;
+				box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+			}
+
+			.subscribe-section p {
+				color: rgb(var(--gray));
+				margin-bottom: 1.5em;
+				font-size: clamp(0.95em, 1.5vw, 1.05em);
+			}
+
+			.subscribe-form {
+				display: flex;
+				gap: 1em;
+				max-width: 550px;
+				margin: 0 auto;
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+
+			.subscribe-form input[type="email"] {
+				flex: 1;
+				min-width: 280px;
+				padding: 1em 1.25em;
+				background: rgb(var(--bg-primary));
+				border: 2px solid rgb(var(--border-color));
+				border-radius: 6px;
+				color: rgb(var(--gray-dark));
+				font-family: 'Courier New', monospace;
+				font-size: 1em;
+				transition: all 0.3s ease;
+			}
+
+			.subscribe-form input[type="email"]:focus {
+				outline: none;
+				border-color: var(--accent);
+				box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.15);
+				background: rgba(var(--bg-primary), 0.8);
+			}
+
+			.subscribe-form input[type="email"]::placeholder {
+				color: rgb(var(--gray));
+				opacity: 0.5;
+			}
+
+			.subscribe-form button {
+				padding: 1em 2.5em;
+				background: var(--accent);
+				color: rgb(var(--bg-primary));
+				border: 2px solid var(--accent);
+				border-radius: 6px;
+				font-weight: 700;
+				font-size: 1em;
+				cursor: pointer;
+				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+				white-space: nowrap;
+			}
+
+			.subscribe-form button:hover {
+				background: var(--accent-secondary);
+				border-color: var(--accent-secondary);
+				transform: translateY(-2px);
+				box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+			}
+
+			.subscribe-form button:active {
+				transform: translateY(0);
+			}
+
+			.subscribe-note {
+				margin-top: 1.25em;
+				font-size: 0.85em;
+				color: rgb(var(--gray));
+				opacity: 0.6;
+			}
+
+			.subscribe-note a {
+				color: var(--accent);
+			}
+
+			@media (max-width: 640px) {
+				.subscribe-section {
+					padding: 2em 1.5em;
+				}
+
+				.subscribe-form {
+					flex-direction: column;
+					gap: 1em;
+				}
+
+				.subscribe-form input[type="email"] {
+					min-width: 100%;
+				}
+
+				.subscribe-form button {
+					width: 100%;
+					padding: 1.25em;
+				}
+			}
+		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+			<div class="hero">
+				<h1 style="text-align: left; background: none; -webkit-text-fill-color: inherit; color: var(--accent);">
+					<span style="color: rgb(var(--gray));">//</span> Breaking systems.<br/>
+					<span style="color: rgb(var(--gray));">//</span> Building platforms.<br/>
+					<span style="color: rgb(var(--gray));">//</span> Documenting both.
+				</h1>
+			</div>
+
+			<div class="section-header">
+				<h2>Quick Access</h2>
+			</div>
+
+			<div class="grid">
+				<div class="card">
+					<h3>Security Research</h3>
+					<ul>
+						<li><a href="https://www.exploit-db.com/" target="_blank">Exploit Database</a></li>
+						<li><a href="https://nvd.nist.gov/" target="_blank">NVD - NIST</a></li>
+						<li><a href="https://cve.mitre.org/" target="_blank">CVE MITRE</a></li>
+						<li><a href="https://attack.mitre.org/" target="_blank">ATT&CK Framework</a></li>
+						<li><a href="https://www.virustotal.com/" target="_blank">VirusTotal</a></li>
+						<li><a href="https://malware.news/" target="_blank">Malware News</a></li>
+					</ul>
+				</div>
+
+				<div class="card">
+					<h3>Reverse Engineering</h3>
+					<ul>
+						<li><a href="https://ghidra-sre.org/" target="_blank">Ghidra</a></li>
+						<li><a href="https://www.hex-rays.com/ida-pro/" target="_blank">IDA Pro</a></li>
+						<li><a href="https://cutter.re/" target="_blank">Cutter (Rizin)</a></li>
+						<li><a href="https://binary.ninja/" target="_blank">Binary Ninja</a></li>
+						<li><a href="https://www.radare.org/" target="_blank">Radare2</a></li>
+					</ul>
+				</div>
+
+				<div class="card">
+					<h3>Kubernetes & Cloud</h3>
+					<ul>
+						<li><a href="https://kubernetes.io/docs/" target="_blank">K8s Documentation</a></li>
+						<li><a href="https://github.com/aquasecurity/kube-bench" target="_blank">Kube-bench</a></li>
+						<li><a href="https://github.com/aquasecurity/trivy" target="_blank">Trivy Scanner</a></li>
+						<li><a href="https://github.com/falcosecurity/falco" target="_blank">Falco Runtime Security</a></li>
+						<li><a href="https://kyverno.io/" target="_blank">Kyverno</a></li>
+						<li><a href="https://www.cncf.io/" target="_blank">CNCF Projects</a></li>
+					</ul>
+				</div>
+
+				<div class="card">
+					<h3>Platform & DevSecOps</h3>
+					<ul>
+						<li><a href="https://www.terraform.io/docs" target="_blank">Terraform Docs</a></li>
+						<li><a href="https://github.com/bridgecrewio/checkov" target="_blank">Checkov IaC Scanner</a></li>
+						<li><a href="https://github.com/tfsec/tfsec" target="_blank">tfsec</a></li>
+						<li><a href="https://www.vaultproject.io/" target="_blank">HashiCorp Vault</a></li>
+						<li><a href="https://argoproj.github.io/" target="_blank">Argo CD</a></li>
+						<li><a href="https://opentofu.org/" target="_blank">OpenTofu</a></li>
+					</ul>
+				</div>
+
+				<div class="card">
+					<h3>Offensive Security</h3>
+					<ul>
+						<li><a href="https://www.offensive-security.com/" target="_blank">Offensive Security</a></li>
+						<li><a href="https://www.ired.team/" target="_blank">ired.team</a></li>
+						<li><a href="https://www.corelan.be/" target="_blank">Corelan Team</a></li>
+						<li><a href="https://github.com/swisskyrepo/PayloadsAllTheThings" target="_blank">PayloadsAllTheThings</a></li>
+						<li><a href="https://book.hacktricks.xyz/" target="_blank">HackTricks</a></li>
+						<li><a href="https://github.com/carlospolop/PEASS-ng" target="_blank">PEASS-ng</a></li>
+					</ul>
+				</div>
+
+				<div class="card">
+					<h3>Learning & CTF</h3>
+					<ul>
+						<li><a href="https://tryhackme.com/" target="_blank">TryHackMe</a></li>
+						<li><a href="https://www.hackthebox.com/" target="_blank">HackTheBox</a></li>
+						<li><a href="https://ctftime.org/" target="_blank">CTFtime</a></li>
+						<li><a href="https://crackmes.one/" target="_blank">Crackmes</a></li>
+						<li><a href="https://pwnable.kr/" target="_blank">pwnable.kr</a></li>
+						<li><a href="https://overthewire.org/" target="_blank">OverTheWire</a></li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="section-header">
+				<h2>Threat Intelligence</h2>
+			</div>
+
+			<div class="embed-section">
+				<h2>Security Feeds & CVE Tracking</h2>
+				<p>Real-time vulnerability intelligence and exploit databases</p>
+				<div class="link-grid">
+					<a href="https://nvd.nist.gov/vuln/search" target="_blank" class="link-card">
+						<strong>NVD - Recent CVEs</strong>
+						<span>Browse latest vulnerabilities from NIST National Vulnerability Database</span>
+					</a>
+					<a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" class="link-card">
+						<strong>CISA KEV Catalog</strong>
+						<span>Known Exploited Vulnerabilities actively used in the wild</span>
+					</a>
+					<a href="https://www.opencve.io/cve" target="_blank" class="link-card">
+						<strong>OpenCVE</strong>
+						<span>Open-source CVE tracking and alerting platform</span>
+					</a>
+					<a href="https://www.cvedetails.com/" target="_blank" class="link-card">
+						<strong>CVE Details</strong>
+						<span>Security vulnerability database with detailed statistics</span>
+					</a>
+				</div>
+			</div>
+
 		</main>
 		<Footer />
 	</body>

@@ -1,5 +1,4 @@
 ---
-import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
@@ -16,68 +15,304 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<BaseHead title={title} description={description} />
 		<style>
 			main {
-				width: calc(100% - 2em);
+				width: 100%;
 				max-width: 100%;
 				margin: 0;
 			}
-			.hero-image {
+
+			.hero-section {
 				width: 100%;
+				background: linear-gradient(135deg, rgb(var(--bg-secondary)) 0%, rgb(var(--bg-tertiary)) 100%);
+				border-bottom: 2px solid var(--accent);
+				padding: 3em 1em 2em;
 			}
-			.hero-image img {
-				display: block;
+
+			.hero-container {
+				max-width: 900px;
 				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
 			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
+
+			.article-header {
 				text-align: center;
-				line-height: 1;
+				margin-bottom: 2em;
 			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
+
+			.article-meta {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 1em;
+				margin-bottom: 1em;
+				font-family: 'Courier New', monospace;
 			}
-			.date {
-				margin-bottom: 0.5em;
+
+			.post-date {
+				color: var(--accent);
+				font-size: 0.95em;
+			}
+
+			.date-separator {
 				color: rgb(var(--gray));
 			}
-			.last-updated-on {
+
+			.updated-date {
+				color: rgb(var(--gray));
+				font-size: 0.9em;
 				font-style: italic;
+			}
+
+			.article-title {
+				font-size: clamp(2em, 5vw, 3.5em);
+				color: rgb(var(--black));
+				margin: 0 0 0.5em;
+				line-height: 1.1;
+			}
+
+			.article-description {
+				font-size: clamp(1.1em, 2vw, 1.3em);
+				color: rgb(var(--gray));
+				max-width: 700px;
+				margin: 0 auto;
+				line-height: 1.5;
+			}
+
+			.hero-image {
+				width: 100%;
+				max-width: 900px;
+				margin: 0 auto;
+			}
+
+			.hero-image img {
+				width: 100%;
+				height: auto;
+				max-height: 500px;
+				object-fit: cover;
+				border-radius: 8px;
+				border: 1px solid rgb(var(--border-color));
+			}
+
+			.prose {
+				width: 800px;
+				max-width: calc(100% - 2em);
+				margin: 3em auto;
+				padding: 0 1em;
+				color: rgb(var(--gray-dark));
+				font-size: clamp(16px, 1.5vw, 18px);
+				line-height: 1.7;
+			}
+
+			.prose :global(h1) {
+				font-size: clamp(2em, 4vw, 2.5em);
+				color: rgb(var(--black));
+				margin: 2em 0 0.75em;
+				border-left: 4px solid var(--accent);
+				padding-left: 0.5em;
+			}
+
+			.prose :global(h2) {
+				font-size: clamp(1.6em, 3vw, 2em);
+				color: rgb(var(--black));
+				margin: 2em 0 0.75em;
+				border-bottom: 1px solid rgb(var(--border-color));
+				padding-bottom: 0.3em;
+			}
+
+			.prose :global(h3) {
+				font-size: clamp(1.3em, 2.5vw, 1.6em);
+				color: rgb(var(--gray));
+				margin: 1.5em 0 0.5em;
+			}
+
+			.prose :global(p) {
+				margin-bottom: 1.5em;
+			}
+
+			.prose :global(a) {
+				color: var(--accent);
+				text-decoration: none;
+				border-bottom: 1px solid transparent;
+				transition: border-color 0.2s ease;
+			}
+
+			.prose :global(a:hover) {
+				border-bottom-color: var(--accent);
+			}
+
+			.prose :global(code) {
+				padding: 3px 6px;
+				background-color: rgb(var(--bg-tertiary));
+				color: var(--accent);
+				font-family: 'Courier New', monospace;
+				font-size: 0.9em;
+				border-radius: 3px;
+				border: 1px solid rgb(var(--border-subtle));
+			}
+
+			.prose :global(pre) {
+				background-color: rgb(var(--bg-tertiary));
+				border: 1px solid rgb(var(--border-color));
+				border-radius: 6px;
+				padding: 1.5em;
+				overflow-x: auto;
+				margin: 1.5em 0;
+				line-height: 1.5;
+			}
+
+			.prose :global(pre code) {
+				background: none;
+				border: none;
+				padding: 0;
+				color: rgb(var(--gray-dark));
+			}
+
+			.prose :global(blockquote) {
+				border-left: 4px solid var(--accent);
+				padding: 1em 0 1em 1.5em;
+				margin: 1.5em 0;
+				background: rgba(var(--bg-secondary), 0.5);
+				font-style: italic;
+				color: rgb(var(--gray));
+			}
+
+			.prose :global(ul), .prose :global(ol) {
+				margin: 1.5em 0;
+				padding-left: 2em;
+			}
+
+			.prose :global(li) {
+				margin: 0.5em 0;
+			}
+
+			.prose :global(img) {
+				max-width: 100%;
+				height: auto;
+				border-radius: 6px;
+				border: 1px solid rgb(var(--border-color));
+				margin: 2em 0;
+			}
+
+			.prose :global(table) {
+				width: 100%;
+				border-collapse: collapse;
+				margin: 2em 0;
+				font-size: 0.95em;
+			}
+
+			.prose :global(table th),
+			.prose :global(table td) {
+				border: 1px solid rgb(var(--border-color));
+				padding: 0.75em;
+				text-align: left;
+			}
+
+			.prose :global(table th) {
+				background-color: rgb(var(--bg-tertiary));
+				color: var(--accent);
+				font-weight: 700;
+			}
+
+			.prose :global(hr) {
+				border: none;
+				border-top: 1px solid rgb(var(--border-color));
+				margin: 3em 0;
+			}
+
+			.back-link {
+				display: inline-block;
+				margin: 2em auto;
+				padding: 0.75em 1.5em;
+				background: rgb(var(--bg-secondary));
+				border: 1px solid rgb(var(--border-color));
+				border-radius: 4px;
+				color: var(--accent);
+				text-decoration: none;
+				transition: all 0.2s ease;
+			}
+
+			.back-link:hover {
+				background: rgb(var(--bg-tertiary));
+				border-color: var(--accent);
+				transform: translateX(-4px);
+			}
+
+			.back-link::before {
+				content: '← ';
+				margin-right: 0.5em;
+			}
+
+			@media (max-width: 768px) {
+				.hero-section {
+					padding: 2em 1em 1.5em;
+				}
+
+				.article-meta {
+					flex-direction: column;
+					gap: 0.5em;
+				}
+
+				.date-separator {
+					display: none;
+				}
+
+				.prose {
+					margin: 2em auto;
+				}
+
+				.prose :global(pre) {
+					padding: 1em;
+					font-size: 0.9em;
+				}
+
+				.prose :global(table) {
+					font-size: 0.85em;
+				}
+
+				.prose :global(table th),
+				.prose :global(table td) {
+					padding: 0.5em;
+				}
 			}
 		</style>
 	</head>
-
 	<body>
 		<Header />
 		<main>
 			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
+				<div class="hero-section">
+					<div class="hero-container">
+						<div class="article-header">
+							<div class="article-meta">
+								<span class="post-date">
+									<FormattedDate date={pubDate} />
+								</span>
+								{updatedDate && (
+									<>
+										<span class="date-separator">•</span>
+										<span class="updated-date">
+											Updated: <FormattedDate date={updatedDate} />
+										</span>
+									</>
+								)}
+							</div>
+							<h1 class="article-title">{title}</h1>
+							{description && (
+								<p class="article-description">{description}</p>
+							)}
 						</div>
-						<h1>{title}</h1>
-						<hr />
+						{heroImage && (
+							<div class="hero-image">
+								<img src={heroImage} alt={title} />
+							</div>
+						)}
 					</div>
+				</div>
+
+				<div class="prose">
 					<slot />
+
+					<div style="text-align: center; margin-top: 4em;">
+						<a href="/blog" class="back-link">Back to all posts</a>
+					</div>
 				</div>
 			</article>
 		</main>
