@@ -1,11 +1,21 @@
-// @ts-check
-
+import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import { defineConfig } from 'astro/config';
+import tailwind from '@astrojs/tailwind';
+import mermaid from 'astro-mermaid';
 
-// https://astro.build/config
 export default defineConfig({
-	site: 'https://example.com',
-	integrations: [mdx(), sitemap()],
+  site: 'https://your-domain.com',
+  integrations: [
+    mdx(), 
+    sitemap(), 
+    tailwind(),
+    mermaid() 
+  ],
+  markdown: {
+    shikiConfig: {
+      theme: 'dracula', // Or 'github-dark', 'material-theme', etc.
+      wrap: true,       // Prevents horizontal scroll on mobile
+    },
+  },
 });
