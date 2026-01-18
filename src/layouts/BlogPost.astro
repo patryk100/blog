@@ -301,7 +301,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 						</div>
 						{heroImage && (
 							<div class="hero-image">
-								<img src={heroImage} alt={title} />
+								<img src={heroImage.src} alt={title} />
 							</div>
 						)}
 					</div>
